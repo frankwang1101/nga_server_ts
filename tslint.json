@@ -13,6 +13,7 @@
       "error",
       "warn"
     ],
+    "ordered-imports": false,
     "space-before-function-paren": false,
     "interface-name": [
       true,

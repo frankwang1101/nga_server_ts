@@ -18,6 +18,14 @@ export default (appInfo: EggAppInfo) => {
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1532938776405_9738';
 
+  config.security = {
+    csrf: {
+      enable: false,
+      headerName: 'x-csrf-token', // 通过 header 传递 CSRF token 的默认字段为 x-csrf-token
+    },
+    domainWhiteList: ['127.0.0.1'],
+  };
+
   // add your config here
   config.middleware = [
     'cors',

@@ -4,6 +4,10 @@ declare module 'egg' {
   }
 }
 
+enum UserStatus {
+  '启用', '禁用', '禁言'
+}
+
 interface IUser {
   uid?: number;
   username: string;
@@ -11,6 +15,11 @@ interface IUser {
   mobile?: number;
   email?: string;
   pwd?: string;
+  status: UserStatus;
   createTime: Date;
   updateTime?: Date;
+}
+
+interface IPost {
+  id: string;
 }
