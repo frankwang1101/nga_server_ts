@@ -5,4 +5,5 @@ export default (app: Application) => {
 
   router.get('/', controller.home.index);
   router.get('/post', controller.home.postsInfo);
+  router.resources('user', '/api/v1/user', controller.user);
 };

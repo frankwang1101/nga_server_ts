@@ -20,8 +20,20 @@ export default (appInfo: EggAppInfo) => {
 
   // add your config here
   config.middleware = [
-    'cors'
+    'cors',
   ];
+
+  config.mysql = {
+    client: {
+      host: '127.0.0.1',
+      port: '3306',
+      user: 'nga_my',
+      password: 'root',
+      database: 'nga',
+    },
+    app: true,
+    agent: false,
+  };
 
   return config;
 };

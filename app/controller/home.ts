@@ -6,6 +6,6 @@ export default class HomeController extends Controller {
     ctx.body = await ctx.service.test.sayHi('egg');
   }
   public async postsInfo() {
-    this.ctx.body = await this.ctx.service.test.getPosts()
+    this.ctx.body = await this.ctx.service.test.getPosts();
   }
 }

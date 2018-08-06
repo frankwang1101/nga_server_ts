@@ -17,6 +17,6 @@ export default class Test extends Service {
     return JSON.stringify({
       today: 123,
       total: 1135,
-    })
+    });
   }
 }
