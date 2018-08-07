@@ -1,6 +1,6 @@
 import { Controller } from 'egg';
 
-export default class HomeController extends Controller {
+export default class UserController extends Controller {
   public async create() {
     const { ctx } = this;
     const body: IUser = ctx.request.body;

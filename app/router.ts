@@ -7,4 +7,6 @@ export default (app: Application) => {
   router.get('/post', controller.home.postsInfo);
   router.resources('user', '/api/v1/user', controller.user);
   router.put('/api/v1/user', controller.user.create);
+  router.resources('post', '', controller.post);
+  router.resources('column', '', controller.column);
 };
