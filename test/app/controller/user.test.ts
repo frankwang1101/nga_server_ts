@@ -6,7 +6,7 @@ describe('test/app/controller/user.test.ts', () => {
   it('should create one ', async () => {
     const result = await app
       .httpRequest()
-      .put('/api/v1/user')
+      .post('/api/v1/user')
       .send({
         uid: 10012,
         username: 'test12',

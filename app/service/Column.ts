@@ -29,9 +29,11 @@ export default class Column extends Service {
       if (result.success) {
         return suc(column);
       } else {
+        console.log(result);
         throw new Error('出错了');
       }
     } catch (e) {
+      console.log(e);
       return err(e.message);
     }
   }
