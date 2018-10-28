@@ -1,6 +1,6 @@
 import { Service } from 'egg';
-import { UserStatus } from '../utils/enum';
-// import * as dayjs from dayjs;
+import { uuid } from '../utils/util';
+import { ReplyType, ReplyState } from '../utils/enum';
 
 const err = (msg) =>
   JSON.stringify({
@@ -17,58 +17,54 @@ const suc = (data) =>
 /**
  * User Service
  */
-export default class User extends Service {
+export default class Reply extends Service {
   /**
-   * add new user
+   * add new reply
    * @param name - your name
    */
-  public async create(user: IUser) {
+  public async create(reply: IReply) {
     const { app, ctx } = this;
     try {
       const result = await app.mysql.beginTransactionScope(async (conn) => {
         // don't commit or rollback by yourself
-        user.createTime = app.mysql.literals.now;
-        user.status = UserStatus.启用;
-        const r = await conn.insert('user', user);
-        return {
-          success: true,
-          data: {
-            ...user,
-            uid: r.insertId,
-          },
-        };
+        reply.id = uuid();
+        reply.rtype = reply.rtype || ReplyType.来自帖子;
+        reply.rstate = ReplyState.有效;
+        reply.createTime = app.mysql.literals.now;
+        await conn.insert('reply', reply);
+        return { success: true };
       }, ctx); //
       if (result.success) {
-        return suc(result.data);
+        return suc(reply);
       } else {
-        throw new Error('新增出错了');
+        throw new Error('出错了');
       }
     } catch (e) {
       return err(e.message);
     }
   }
 
-  public async show(uid: number) {
+  public async show(id: string) {
     const { app } = this;
     try {
-      const result = await app.mysql.get('user', {
-        uid,
+      const result = await app.mysql.get('reply', {
+        id,
       });
       if (result) {
         return suc(result);
       } else {
-        throw new Error('获取出错了');
+        throw new Error('出错了');
       }
     } catch (e) {
       return err(e.message);
     }
   }
 
-  public async destory(uid: number) {
+  public async destory(id: number) {
     const { app } = this;
     try {
-      const result = await app.mysql.delete('user', {
-        uid,
+      const result = await app.mysql.delete('reply', {
+        id,
       });
       if (result) {
         return suc(result);

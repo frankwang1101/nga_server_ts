@@ -4,22 +4,39 @@ declare module 'egg' {
   }
 }
 
-enum UserStatus {
-  '启用', '禁用', '禁言'
-}
-
 interface IUser {
-  uid?: number;
+  uid: number;
   username: string;
   nickname: string;
   mobile?: number;
   email?: string;
   pwd?: string;
   status: UserStatus;
-  createTime: Date;
+  createTime?: Date;
   updateTime?: Date;
 }
 
 interface IPost {
   id: string;
+  authorid: number;
+  title: string;
+  content: string;
+  pstate: PostState;
+  voteUp: number;
+  voteDown: number;
+  createTime?: Date;
+  updateTime?: Date;
+}
+
+interface IReply {
+  id: string;
+  authorid: number;
+  postid: string;
+  content: string;
+  rtype: ReplyType;
+  rstate: ReplyState;
+  voteUp: number;
+  voteDown: number;
+  createTime?: Date;
+  updateTime?: Date;
 }
