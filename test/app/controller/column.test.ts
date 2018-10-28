@@ -1,6 +1,5 @@
 import * as assert from 'assert';
 import { app } from 'egg-mock/bootstrap';
-import * as dayjs from 'dayjs';
 describe('test/app/controller/column.test.ts', () => {
   let id = 0;
   it('should create one ', async () => {
