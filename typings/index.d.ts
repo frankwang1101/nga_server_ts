@@ -19,6 +19,7 @@ interface IUser {
 interface IPost {
   id: string;
   authorid: number;
+  author?: IUser;
   title: string;
   content: string;
   pstate: PostState;
@@ -31,7 +32,9 @@ interface IPost {
 interface IReply {
   id: string;
   authorid: number;
+  author?: IUser;
   postid: string;
+  post?: IPost;
   content: string;
   rtype: ReplyType;
   rstate: ReplyState;
@@ -39,4 +42,15 @@ interface IReply {
   voteDown: number;
   createTime?: Date;
   updateTime?: Date;
+}
+
+interface IColumn {
+  id: string;
+  title: string;
+  desc: string;
+  ctype: ColumnType;
+  master?: Array<IUser>;
+  createTime: Date;
+  updateTime?: Date;
+  order: number;
 }

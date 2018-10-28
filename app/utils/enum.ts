@@ -20,3 +20,8 @@ export enum ReplyState {
   '删除',
   '折叠',
 }
+
+export enum ColumnType {
+  '官方' = 0,
+  '个人',
+}

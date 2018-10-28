@@ -1,36 +1,36 @@
 import * as assert from 'assert';
 import { app } from 'egg-mock/bootstrap';
 import * as dayjs from 'dayjs';
-const d = Date.now();
 describe('test/app/controller/column.test.ts', () => {
+  let id = 0;
   it('should create one ', async () => {
     const result = await app
       .httpRequest()
       .post(`/api/v1/column`)
       .send({
-        uid: d.toString(),
         title: 'column-title',
         desc: 'column-content',
         order: 1,
-        createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       })
       .set('x-csrf-token', '1231')
       .expect(200);
-    assert(JSON.parse(result.text).data.title === 'column-title');
+    const res = JSON.parse(result.text);
+    id = res.data.id;
+    assert(res.data.title === 'column-title');
   });
 
   it('should GET that', async () => {
     const result = await app
       .httpRequest()
-      .get(`/api/v1/column/${d}`)
+      .get(`/api/v1/column/${id}`)
       .expect(200);
-    assert(JSON.parse(result.text).data.uid === d.toString());
+    assert(JSON.parse(result.text).data.id === id);
   });
 
   it('should delete that one', async () => {
     const result = await app
       .httpRequest()
-      .delete(`/api/v1/column/${d}`)
+      .delete(`/api/v1/column/${id}`)
       .expect(200);
     assert(JSON.parse(result.text).code === 0);
   });

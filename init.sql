@@ -45,3 +45,14 @@ CREATE TABLE `reply` (
   CONSTRAINT `reply_ibfk_1` FOREIGN KEY (`authorid`) REFERENCES `user` (`uid`),
   CONSTRAINT `reply_ibfk_2` FOREIGN KEY (`postid`) REFERENCES `post` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- 栏目表
+CREATE TABLE `column` (
+  `id` varchar(36) NOT NULL DEFAULT '',
+  `title` varchar(40) NOT NULL DEFAULT '',
+  `desc` varchar(40) NOT NULL DEFAULT '',
+  `ctype` int(1) DEFAULT '0',
+  `order` int(1) NOT NULL,
+  `createtime` datetime NOT NULL,
+  `updatetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

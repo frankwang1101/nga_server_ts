@@ -9,4 +9,5 @@ export default (app: Application) => {
   router.resources('user', '/api/v1/user', controller.user);
   router.resources('post', '/api/v1/post', controller.post);
   router.resources('reply', '/api/v1/reply', controller.reply);
+  router.resources('column', '/api/v1/column', controller.column);
 };

@@ -1,14 +1,18 @@
 import { Service } from 'egg';
+import { ColumnType } from '../utils/enum';
+import { uuid } from '../utils/util';
 
-const err = (msg) => JSON.stringify({
-  code: -1,
-  msg,
-});
+const err = (msg) =>
+  JSON.stringify({
+    code: -1,
+    msg,
+  });
 
-const suc = (data) => JSON.stringify({
-  code: 0,
-  data,
-});
+const suc = (data) =>
+  JSON.stringify({
+    code: 0,
+    data,
+  });
 
 /**
  * Column Service
@@ -23,6 +27,9 @@ export default class Column extends Service {
     try {
       const result = await app.mysql.beginTransactionScope(async (conn) => {
         // don't commit or rollback by yourself
+        column.id = uuid();
+        column.ctype = column.ctype || ColumnType.官方;
+        column.createTime = app.mysql.literals.now;
         await conn.insert('column', column);
         return { success: true };
       }, ctx); //
@@ -38,11 +45,11 @@ export default class Column extends Service {
     }
   }
 
-  public async show(uid: string) {
-    const {app} = this;
+  public async show(id: string) {
+    const { app } = this;
     try {
       const result = await app.mysql.get('column', {
-        uid,
+        id,
       });
       if (result) {
         return suc(result);
@@ -54,11 +61,11 @@ export default class Column extends Service {
     }
   }
 
-  public async destory(uid: number) {
-    const {app} = this;
+  public async destory(id: number) {
+    const { app } = this;
     try {
       const result = await app.mysql.delete('column', {
-        uid,
+        id,
       });
       if (result) {
         return suc(result);
