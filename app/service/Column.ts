@@ -1,6 +1,6 @@
 import { Service } from 'egg';
 import { ColumnType } from '../utils/enum';
-import { uuid, err, suc } from '../utils/util';
+import { uuid, err, suc, sqlGenerator } from '../utils/util';
 
 /**
  * Column Service
