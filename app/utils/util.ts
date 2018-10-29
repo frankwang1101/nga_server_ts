@@ -41,7 +41,7 @@ export const getType = (t) => {
   return match[1].toLowerCase();
 };
 
-export const sqlGenerator = (table, params, page, rows) => {
+export const sqlGenerator = (table, params, page?, rows?) => {
   let sql = `select * from ${table} t `;
   const order = ' order by createtime desc ';
   const whereCls: string[] = [];
@@ -79,6 +79,8 @@ export const sqlGenerator = (table, params, page, rows) => {
   });
   sql += whereCls.join(' ');
   sql += order;
-  sql += `limit ${(page - 1) * rows},${rows}`;
+  if (page && rows) {
+    sql += `limit ${(page - 1) * rows},${rows}`;
+  }
   return [sql, vals];
 };

@@ -52,10 +52,16 @@ export default class Column extends Service {
   public async showList({ key = '' }) {
     const { app } = this;
     try {
-      const result = await app.mysql.select('reply', {
-        where: { key },
-        order: ['createtime', 'desc'],
-      });
+
+      const params: any = {}
+      if (key) {
+        params.title = {
+          operator: '%',
+          text: key
+        }
+      }
+      const [sql, vals] = sqlGenerator('column', params)
+      const result = await app.mysql.query(sql, vals);
       if (result) {
         return result;
       } else {
