@@ -1,18 +1,6 @@
 import { Service } from 'egg';
-import { uuid } from '../utils/util';
+import { uuid, err, suc, sqlGenerator } from '../utils/util';
 import { ReplyType, ReplyState } from '../utils/enum';
-
-const err = (msg) =>
-  JSON.stringify({
-    code: -1,
-    msg,
-  });
-
-const suc = (data) =>
-  JSON.stringify({
-    code: 0,
-    data,
-  });
 
 /**
  * User Service
@@ -57,6 +45,31 @@ export default class Reply extends Service {
       }
     } catch (e) {
       return err(e.message);
+    }
+  }
+
+  public async showList({ page, rows, uid = '', key = '' }) {
+    const { app } = this;
+    try {
+      const params: any = {}
+      if (uid) {
+        params.uid = uid
+      }
+      if (key) {
+        params.title = {
+          operator: '%',
+          text: key
+        }
+      }
+      const [sql, vals] = sqlGenerator('reply', params, page, rows)
+      const result = await app.mysql.query(sql, vals);
+      if (result) {
+        return result;
+      } else {
+        throw new Error('出错了');
+      }
+    } catch (e) {
+      return e;
     }
   }
 

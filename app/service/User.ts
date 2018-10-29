@@ -1,18 +1,6 @@
 import { Service } from 'egg';
 import { UserStatus } from '../utils/enum';
-// import * as dayjs from dayjs;
-
-const err = (msg) =>
-  JSON.stringify({
-    code: -1,
-    msg,
-  });
-
-const suc = (data) =>
-  JSON.stringify({
-    code: 0,
-    data,
-  });
+import { err, suc, sqlGenerator } from '../utils/util';
 
 /**
  * User Service
@@ -34,8 +22,8 @@ export default class User extends Service {
           success: true,
           data: {
             ...user,
-            uid: r.insertId,
-          },
+            uid: r.insertId
+          }
         };
       }, ctx); //
       if (result.success) {
@@ -52,7 +40,7 @@ export default class User extends Service {
     const { app } = this;
     try {
       const result = await app.mysql.get('user', {
-        uid,
+        uid
       });
       if (result) {
         return suc(result);
@@ -64,11 +52,42 @@ export default class User extends Service {
     }
   }
 
+  public async showList({ page, rows, username = '', nickname = '' }) {
+    const { app } = this;
+    try {
+      const params: any = {};
+      if (username) {
+        params.username = {
+          operator: '%',
+          text: username
+        };
+      }
+      if (nickname) {
+        params.nickname = {
+          operator: '%',
+          text: nickname
+        };
+      }
+      // 生成sql
+      const [sql, vals] = sqlGenerator('user', params, page, rows);
+      const result = await app.mysql.query(sql, vals);
+      if (result) {
+        return result.map((r) => ({
+          ...r
+        }));
+      } else {
+        throw new Error('出错了');
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
   public async destory(uid: number) {
     const { app } = this;
     try {
       const result = await app.mysql.delete('user', {
-        uid,
+        uid
       });
       if (result) {
         return suc(result);

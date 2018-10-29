@@ -1,18 +1,6 @@
 import { Service } from 'egg';
 import { ColumnType } from '../utils/enum';
-import { uuid } from '../utils/util';
-
-const err = (msg) =>
-  JSON.stringify({
-    code: -1,
-    msg,
-  });
-
-const suc = (data) =>
-  JSON.stringify({
-    code: 0,
-    data,
-  });
+import { uuid, err, suc } from '../utils/util';
 
 /**
  * Column Service
@@ -58,6 +46,23 @@ export default class Column extends Service {
       }
     } catch (e) {
       return err(e.message);
+    }
+  }
+
+  public async showList({ key = '' }) {
+    const { app } = this;
+    try {
+      const result = await app.mysql.select('reply', {
+        where: { key },
+        order: ['createtime', 'desc'],
+      });
+      if (result) {
+        return result;
+      } else {
+        throw new Error('出错了');
+      }
+    } catch (e) {
+      return e;
     }
   }
 

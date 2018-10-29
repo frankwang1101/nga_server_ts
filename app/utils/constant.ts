@@ -1,0 +1,1 @@
+export const MD5SALTVAL = 'testngaserver';

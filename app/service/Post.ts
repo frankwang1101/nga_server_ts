@@ -1,18 +1,6 @@
 import { Service } from 'egg';
 import { PostState } from '../utils/enum';
-import { uuid } from '../utils/util';
-
-const err = (msg) =>
-  JSON.stringify({
-    code: -1,
-    msg,
-  });
-
-const suc = (data) =>
-  JSON.stringify({
-    code: 0,
-    data,
-  });
+import { uuid, err, suc, sqlGenerator } from '../utils/util';
 
 /**
  * User Service
@@ -45,18 +33,42 @@ export default class Post extends Service {
 
   public async show(id: string) {
     const { app } = this;
-    console.log(id, 'iii');
     try {
       const result = await app.mysql.get('post', {
-        id,
+        id
       });
       if (result) {
-        return suc(result);
+        return result;
       } else {
         throw new Error('出错了');
       }
     } catch (e) {
-      return err(e.message);
+      return e;
+    }
+  }
+
+  public async showList({ page, rows, uid = '', key = '' }) {
+    const { app } = this;
+    try {
+      const params: any = {}
+      if (uid) {
+        params.uid = uid
+      }
+      if (key) {
+        params.title = {
+          operator: '%',
+          text: key
+        }
+      }
+      const [sql, vals] = sqlGenerator('post', params, page, rows)
+      const result = await app.mysql.query(sql, vals);
+      if (result) {
+        return result;
+      } else {
+        throw new Error('出错了');
+      }
+    } catch (e) {
+      return e;
     }
   }
 
@@ -64,7 +76,7 @@ export default class Post extends Service {
     const { app } = this;
     try {
       const result = await app.mysql.delete('post', {
-        id,
+        id
       });
       if (result) {
         return suc(result);
