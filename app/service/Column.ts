@@ -18,7 +18,7 @@ export default class Column extends Service {
         column.id = uuid();
         column.ctype = column.ctype || ColumnType.官方;
         column.createTime = app.mysql.literals.now;
-        await conn.insert('column', column);
+        await conn.insert('n_column', column);
         return { success: true };
       }, ctx); //
       if (result.success) {
@@ -36,16 +36,16 @@ export default class Column extends Service {
   public async show(id: string) {
     const { app } = this;
     try {
-      const result = await app.mysql.get('column', {
+      const result = await app.mysql.get('n_column', {
         id,
       });
       if (result) {
-        return suc(result);
+        return result;
       } else {
         throw new Error('出错了');
       }
     } catch (e) {
-      return err(e.message);
+      return e;
     }
   }
 
@@ -60,7 +60,7 @@ export default class Column extends Service {
           text: key
         }
       }
-      const [sql, vals] = sqlGenerator('column', params)
+      const [sql, vals] = sqlGenerator('n_column', params)
       const result = await app.mysql.query(sql, vals);
       if (result) {
         return result;
@@ -75,7 +75,7 @@ export default class Column extends Service {
   public async destory(id: number) {
     const { app } = this;
     try {
-      const result = await app.mysql.delete('column', {
+      const result = await app.mysql.delete('n_column', {
         id,
       });
       if (result) {

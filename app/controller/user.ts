@@ -7,7 +7,7 @@ export default class UserController extends Controller {
   public async create() {
     const { ctx } = this;
     const body: IUser = ctx.request.body;
-    body.pwd = md5(body.pwd, MD5SALTVAL, true);
+    body.pwd = md5(body.pwd, MD5SALTVAL, false);
     ctx.body = await ctx.service.user.create(body);
   }
   public async show() {

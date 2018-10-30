@@ -10,6 +10,7 @@ logs/
 *.swp
 *.lock
 *.js
+test.ts
 !.autod.conf.js
 =/
 

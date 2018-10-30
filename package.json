@@ -18,7 +18,8 @@
     "ci": "npm run lint && npm run cov && npm run tsc",
     "autod": "autod",
     "lint": "tslint --project . -c tslint.json",
-    "clean": "ets clean"
+    "clean": "ets clean",
+    "testscript": "ts-node test.ts"
   },
   "dependencies": {
     "blueimp-md5": "^2.10.0",

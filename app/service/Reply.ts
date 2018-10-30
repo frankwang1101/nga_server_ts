@@ -19,7 +19,7 @@ export default class Reply extends Service {
         reply.rtype = reply.rtype || ReplyType.来自帖子;
         reply.rstate = ReplyState.有效;
         reply.createTime = app.mysql.literals.now;
-        await conn.insert('reply', reply);
+        await conn.insert('n_reply', reply);
         return { success: true };
       }, ctx); //
       if (result.success) {
@@ -35,7 +35,7 @@ export default class Reply extends Service {
   public async show(id: string) {
     const { app } = this;
     try {
-      const result = await app.mysql.get('reply', {
+      const result = await app.mysql.get('n_reply', {
         id,
       });
       if (result) {
@@ -48,7 +48,7 @@ export default class Reply extends Service {
     }
   }
 
-  public async showList({ page, rows, uid = '', key = '' }) {
+  public async showList({ page, rows, uid = '', postid = '', key = '' }) {
     const { app } = this;
     try {
       const params: any = {}
@@ -61,7 +61,10 @@ export default class Reply extends Service {
           text: key
         }
       }
-      const [sql, vals] = sqlGenerator('reply', params, page, rows)
+      if (postid) {
+        params.postid = postid
+      }
+      const [sql, vals] = sqlGenerator('n_reply', params, page, rows)
       const result = await app.mysql.query(sql, vals);
       if (result) {
         return result;
@@ -76,7 +79,7 @@ export default class Reply extends Service {
   public async destory(id: number) {
     const { app } = this;
     try {
-      const result = await app.mysql.delete('reply', {
+      const result = await app.mysql.delete('n_reply', {
         id,
       });
       if (result) {

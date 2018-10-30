@@ -41,12 +41,58 @@ export const getType = (t) => {
   return match[1].toLowerCase();
 };
 
-export const sqlGenerator = (table, params, page?, rows?) => {
-  let sql = `select * from ${table} t `;
+export const sqlGenerator = (
+  table,
+  params,
+  page?,
+  rows?,
+  cols: string[] = [],
+  joins: Array<{
+    table: string;
+    type: string;
+    cols: string[];
+    whereCls?: {
+      left: {
+        table: string,
+        col: string
+      };
+      right:{
+        table: string,
+        col: string
+      };
+    };
+  }> = []
+) => {
+  let tableCount: number = 0;
+  const joinText: string[] = [];
+  const joinConditions: any[] = [];
+  const colName: string[] = cols.length ? cols : ['t.*'];
+  const tableMap = {
+    [table]: 't'
+  };
+  // 联合查询匹配
+  if (joins.length) {
+    joins.forEach((join) => {
+      if (join.cols.length) {
+        colName.push(join.cols.map((col) => `t${tableCount}.${col} as _${join.table}__${col}`).join(','));
+      } else {
+        colName.push(`t${tableCount}.*`);
+      }
+      joinText.push(`${join.type} ${join.table} t${tableCount}`);
+      joinConditions.push(join.whereCls);
+      tableMap[join.table] = `t${tableCount}`;
+      tableCount++;
+    });
+  }
+  let sql = `select ${colName.join(',')} from ${table} t ${joinText.join(
+    ' '
+  )} `;
+  // 排序
   const order = ' order by createtime desc ';
   const whereCls: string[] = [];
   const vals: string[] = [];
   const keys = Object.keys(params);
+  // 条件匹配
   keys.forEach((key: string) => {
     const val = params[key];
     let wildcard = val;
@@ -58,6 +104,7 @@ export const sqlGenerator = (table, params, page?, rows?) => {
       switch (operator) {
         case '%':
           whereCls.push(`t.${key} like ?`);
+
           wildcard = `%${val.text}%`;
           break;
         case '>':
@@ -78,7 +125,18 @@ export const sqlGenerator = (table, params, page?, rows?) => {
     vals.push(wildcard);
   });
   sql += whereCls.join(' ');
+  // 联合查询表条件匹配
+  joinConditions.map((condition, idx) => {
+    const text = `${tableMap[condition.left.table]}.${condition.left.col}=${
+      tableMap[condition.right.table]
+    }.${condition.right.col}`;
+    if (!whereCls.length && !idx) {
+      return `where ${text}`;
+    }
+    return `and ${text}`;
+  });
   sql += order;
+  // 分页
   if (page && rows) {
     sql += `limit ${(page - 1) * rows},${rows}`;
   }

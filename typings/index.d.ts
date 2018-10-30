@@ -20,6 +20,8 @@ interface IPost {
   id: string;
   authorid: number;
   author?: IUser;
+  colid: string;
+  column?: IColumn;
   title: string;
   content: string;
   pstate: PostState;

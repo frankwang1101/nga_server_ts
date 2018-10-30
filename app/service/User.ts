@@ -17,7 +17,7 @@ export default class User extends Service {
         // don't commit or rollback by yourself
         user.createTime = app.mysql.literals.now;
         user.status = UserStatus.启用;
-        const r = await conn.insert('user', user);
+        const r = await conn.insert('n_user', user);
         return {
           success: true,
           data: {
@@ -39,7 +39,7 @@ export default class User extends Service {
   public async show(uid: number) {
     const { app } = this;
     try {
-      const result = await app.mysql.get('user', {
+      const result = await app.mysql.get('n_user', {
         uid
       });
       if (result) {
@@ -69,7 +69,7 @@ export default class User extends Service {
         };
       }
       // 生成sql
-      const [sql, vals] = sqlGenerator('user', params, page, rows);
+      const [sql, vals] = sqlGenerator('n_user', params, page, rows);
       const result = await app.mysql.query(sql, vals);
       if (result) {
         return result.map((r) => ({
@@ -86,7 +86,7 @@ export default class User extends Service {
   public async destory(uid: number) {
     const { app } = this;
     try {
-      const result = await app.mysql.delete('user', {
+      const result = await app.mysql.delete('n_user', {
         uid
       });
       if (result) {

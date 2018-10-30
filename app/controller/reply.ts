@@ -23,6 +23,7 @@ export default class ReplyController extends Controller {
       rows: ctx.query.rows || 10,
       key: ctx.query.key,
       userid: ctx.query.uid,
+      postid: ctx.query.postid
     };
     const replyList: IReply[] & Error = await ctx.service.reply.showList(data);
     ctx.body = entitySolve(replyList);
