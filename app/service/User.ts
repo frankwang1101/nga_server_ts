@@ -36,6 +36,24 @@ export default class User extends Service {
     }
   }
 
+  public async check(data: { username: string; pwd: string }) {
+    const { app } = this;
+    try {
+      const result = await app.mysql.get('n_user', {
+        ...data
+      });
+      console.log(result, data)
+      if (result) {
+        return result;
+      } else {
+        throw new Error('未找到用户');
+      }
+    } catch (e) {
+      console.log(e);
+      return e;
+    }
+  }
+
   public async show(uid: number) {
     const { app } = this;
     try {
